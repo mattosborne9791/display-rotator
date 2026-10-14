@@ -63,7 +63,7 @@ const DASHBOARDS = [
   { id: 'frame-1', label: 'Mouldshop' },
 ];
 
-const DWELL_MS = 30000; // 30 seconds per dashboard — edit this to change
+const DWELL_MS = 120000; // 120 seconds per dashboard — edit this to change
 
 let current = 0;
 const progressEl = document.getElementById('progress');
@@ -89,6 +89,10 @@ function show(index) {
 
 function next() {
   current = (current + 1) % DASHBOARDS.length;
+  // Reload the iframe that's about to become visible so data is fresh
+  const frameWrap = document.getElementById(DASHBOARDS[current].id);
+  const iframe = frameWrap.querySelector('iframe');
+  iframe.src = iframe.src;
   show(current);
 }
 
