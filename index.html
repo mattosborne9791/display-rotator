@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Display</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+
+.frame-wrap {
+  position: fixed; inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+.frame-wrap.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+iframe {
+  width: 100%; height: 100%;
+  border: none; display: block;
+}
+
+/* Progress bar */
+.progress-bar {
+  position: fixed; bottom: 0; left: 0;
+  height: 3px; width: 0%;
+  background: rgba(255,255,255,0.4);
+  z-index: 1000;
+  transition: width linear;
+}
+
+/* Label chip */
+.label-chip {
+  position: fixed; bottom: 10px; right: 14px;
+  font-family: system-ui, sans-serif;
+  font-size: 11px; font-weight: 600;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.08em;
+  z-index: 1000;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div class="frame-wrap" id="frame-0">
+  <iframe src="https://mattosborne9791.github.io/nickerson-dashboard/" title="Nickerson Dashboard"></iframe>
+</div>
+<div class="frame-wrap" id="frame-1">
+  <iframe src="https://mattosborne9791.github.io/mouldshop-dashboard/" title="Mouldshop Dashboard"></iframe>
+</div>
+
+<div class="progress-bar" id="progress"></div>
+<div class="label-chip" id="label"></div>
+
+<script>
+const DASHBOARDS = [
+  { id: 'frame-0', label: 'Nickerson PMS' },
+  { id: 'frame-1', label: 'Mouldshop' },
+];
+
+const DWELL_MS = 30000; // 30 seconds per dashboard — edit this to change
+
+let current = 0;
+const progressEl = document.getElementById('progress');
+const labelEl    = document.getElementById('label');
+
+function show(index) {
+  DASHBOARDS.forEach((d, i) => {
+    const el = document.getElementById(d.id);
+    el.classList.toggle('active', i === index);
+  });
+  labelEl.textContent = DASHBOARDS[index].label;
+
+  // Animate progress bar
+  progressEl.style.transition = 'none';
+  progressEl.style.width = '0%';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      progressEl.style.transition = `width ${DWELL_MS}ms linear`;
+      progressEl.style.width = '100%';
+    });
+  });
+}
+
+function next() {
+  current = (current + 1) % DASHBOARDS.length;
+  show(current);
+}
+
+show(0);
+setInterval(next, DWELL_MS);
+</script>
+</body>
+</html>
