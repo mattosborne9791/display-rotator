@@ -89,10 +89,6 @@ function show(index) {
 
 function next() {
   current = (current + 1) % DASHBOARDS.length;
-  // Reload the iframe that's about to become visible so data is fresh
-  const frameWrap = document.getElementById(DASHBOARDS[current].id);
-  const iframe = frameWrap.querySelector('iframe');
-  iframe.src = iframe.src;
   show(current);
 }
 
