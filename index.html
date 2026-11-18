@@ -13,16 +13,18 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
   opacity: 0;
   transition: opacity 0.8s ease;
   pointer-events: none;
+  background: #000;
 }
 .frame-wrap.active {
   opacity: 1;
   pointer-events: auto;
 }
 
-iframe {
+iframe, video {
   width: 100%; height: 100%;
   border: none; display: block;
 }
+video { object-fit: contain; background: #000; }
 
 /* Progress bar */
 .progress-bar {
@@ -48,24 +50,29 @@ iframe {
 <body>
 
 <div class="frame-wrap" id="frame-0">
-  <iframe src="https://mattosborne9791.github.io/nickerson-dashboard/" title="Nickerson Dashboard"></iframe>
-</div>
-<div class="frame-wrap" id="frame-1">
   <iframe src="https://mattosborne9791.github.io/mouldshop-dashboard/" title="Mouldshop Dashboard"></iframe>
 </div>
+<div class="frame-wrap" id="frame-1">
+  <iframe src="https://mattosborne9791.github.io/nickerson-dashboard/" title="Nickerson Dashboard"></iframe>
+</div>
 <div class="frame-wrap" id="frame-2">
-  <iframe src="https://mattosborne9791.github.io/Whats-on-the-board/" title="What's on the Board"></iframe>
+  <iframe src="https://mattosborne9791.github.io/mouldshop-dashboard/pipeline.html" title="Pipeline Value"></iframe>
+</div>
+<div class="frame-wrap" id="frame-3">
+  <video src="https://mattosborne9791.github.io/Whats-on-the-board/Whats%20on%20the%20board%20claude.mp4"
+         muted playsinline preload="auto"></video>
 </div>
 
 <div class="progress-bar" id="progress"></div>
 <div class="label-chip" id="label"></div>
 
 <script>
-// dwell = milliseconds each dashboard stays on screen — edit to change
+// dwell = milliseconds each screen stays up — edit to change
 const DASHBOARDS = [
-  { id: 'frame-0', label: 'Nickerson PMS',      dwell: 120000 }, // 120 s
-  { id: 'frame-1', label: 'Mouldshop',          dwell: 120000 }, // 120 s
-  { id: 'frame-2', label: "What's on the Board", dwell: 10000 },  // 10 s
+  { id: 'frame-0', label: 'Mouldshop',           dwell: 60000 }, // 60 s
+  { id: 'frame-1', label: 'Nickerson PMS',       dwell: 60000 }, // 60 s
+  { id: 'frame-2', label: 'Pipeline Value',      dwell: 60000 }, // 60 s
+  { id: 'frame-3', label: "What's on the Board", dwell: 10000 }, // 10 s
 ];
 
 let current = 0;
@@ -76,6 +83,17 @@ function show(index) {
   DASHBOARDS.forEach((d, i) => {
     const el = document.getElementById(d.id);
     el.classList.toggle('active', i === index);
+
+    // Play the video from the start when its turn comes; pause it otherwise
+    const video = el.querySelector('video');
+    if (video) {
+      if (i === index) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    }
   });
   labelEl.textContent = DASHBOARDS[index].label;
   const dwell = DASHBOARDS[index].dwell;
