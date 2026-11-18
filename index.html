@@ -53,17 +53,20 @@ iframe {
 <div class="frame-wrap" id="frame-1">
   <iframe src="https://mattosborne9791.github.io/mouldshop-dashboard/" title="Mouldshop Dashboard"></iframe>
 </div>
+<div class="frame-wrap" id="frame-2">
+  <iframe src="https://mattosborne9791.github.io/Whats-on-the-board/" title="What's on the Board"></iframe>
+</div>
 
 <div class="progress-bar" id="progress"></div>
 <div class="label-chip" id="label"></div>
 
 <script>
+// dwell = milliseconds each dashboard stays on screen — edit to change
 const DASHBOARDS = [
-  { id: 'frame-0', label: 'Nickerson PMS' },
-  { id: 'frame-1', label: 'Mouldshop' },
+  { id: 'frame-0', label: 'Nickerson PMS',      dwell: 120000 }, // 120 s
+  { id: 'frame-1', label: 'Mouldshop',          dwell: 120000 }, // 120 s
+  { id: 'frame-2', label: "What's on the Board", dwell: 10000 },  // 10 s
 ];
-
-const DWELL_MS = 120000; // 120 seconds per dashboard — edit this to change
 
 let current = 0;
 const progressEl = document.getElementById('progress');
@@ -75,16 +78,19 @@ function show(index) {
     el.classList.toggle('active', i === index);
   });
   labelEl.textContent = DASHBOARDS[index].label;
+  const dwell = DASHBOARDS[index].dwell;
 
   // Animate progress bar
   progressEl.style.transition = 'none';
   progressEl.style.width = '0%';
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      progressEl.style.transition = `width ${DWELL_MS}ms linear`;
+      progressEl.style.transition = `width ${dwell}ms linear`;
       progressEl.style.width = '100%';
     });
   });
+
+  setTimeout(next, dwell);
 }
 
 function next() {
@@ -93,7 +99,6 @@ function next() {
 }
 
 show(0);
-setInterval(next, DWELL_MS);
 </script>
 </body>
 </html>
